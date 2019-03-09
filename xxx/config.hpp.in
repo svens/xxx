@@ -1,0 +1,64 @@
+#pragma once
+
+
+/**
+ * \file @PROJECT_NAME@/config.hpp
+ * Building configuration.
+ *
+ * After inclusion, number of preprocessor symbols are defined that describe
+ * building environment. Also provides constexpr variable for library version.
+ */
+
+#include <cstddef>
+#include <cstdint>
+#include <string_view>
+
+
+#define __@PROJECT_NAME@_begin namespace @PROJECT_NAME@ { inline namespace v0 {
+#define __@PROJECT_NAME@_end   }} // namespace @PROJECT_NAME@::v0
+
+
+__@PROJECT_NAME@_begin
+
+
+/// XXX version
+constexpr std::string_view build_version{"@PROJECT_VERSION@"};
+
+
+//
+// __@PROJECT_NAME@_arch
+//
+
+#if defined(__i386__) || defined(_M_IX86)
+  #define __@PROJECT_NAME@_arch_x86 1
+#elif defined(__x86_64__) || defined(_M_X64)
+  #define __@PROJECT_NAME@_arch_x64 1
+#endif
+
+
+//
+// __@PROJECT_NAME@_os
+//
+
+#if defined(__linux__)
+  #define __@PROJECT_NAME@_os_linux 1
+#elif defined(__APPLE__)
+  #define __@PROJECT_NAME@_os_macos 1
+#elif defined(_WIN32) || defined(_WIN64)
+  #define __@PROJECT_NAME@_os_windows 1
+#endif
+
+
+//
+// __@PROJECT_NAME@_warning_suppress_XXX
+//
+
+#if _MSC_VER
+  #define __@PROJECT_NAME@_warning_suppress_aligned_struct_padding \
+    __pragma(warning(suppress: 4324))
+#else
+  #define __@PROJECT_NAME@_warning_suppress_aligned_struct_padding
+#endif
+
+
+__@PROJECT_NAME@_end

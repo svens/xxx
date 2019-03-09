@@ -1,0 +1,40 @@
+language: cpp
+
+group: travis_latest
+
+git:
+  submodules: false
+
+matrix:
+  include:
+    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Coverage }
+    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Debug }
+    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Release }
+    - { os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Debug }
+    - { os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Release }
+    - { os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Debug }
+    - { os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Release }
+    - { os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Debug }
+    - { os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Release }
+    - { os: windows, env: BUILD_TYPE=Debug }
+    - { os: windows, env: BUILD_TYPE=Release }
+
+addons:
+  apt:
+    sources: ubuntu-toolchain-r-test
+    packages:
+      - g++-8
+      - ninja-build
+  homebrew:
+    packages:
+      - gcc
+      - ninja
+
+install: |
+  source scripts/travis_install.sh
+
+script: |
+  source scripts/travis_script.sh
+
+after_success: |
+  source scripts/travis_success.sh

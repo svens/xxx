@@ -1,0 +1,6 @@
+[submodule "tps/catch2"]
+	path = tps/catch2
+	url = https://github.com/catchorg/catch2
+[submodule "tps/gbench"]
+	path = tps/gbench
+	url = https://github.com/google/benchmark
