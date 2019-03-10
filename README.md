@@ -28,9 +28,8 @@ The source tree is organised as follows:
 
     .               Root of source tree
     |- xxx          Library ...
-    |  `- module    ... per module headers/sources
+    |  `- module    ... per module headers/sources/tests
     |- bench        Benchmarks
     |- cmake        CMake modules
     |- scripts      Helper scripts
-    |- tests        Unittests
     `- tps          External code as git submodules

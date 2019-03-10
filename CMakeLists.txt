@@ -59,13 +59,10 @@ set_source_files_properties(${CMAKE_BINARY_DIR}/${PROJECT_NAME}/config.hpp
   PROPERTIES GENERATED TRUE
 )
 
+
 # Targets {{{1
 
 include(${PROJECT_NAME}/list.cmake)
-
-if(${PROJECT_NAME}_unittests)
-  include(tests/list.cmake)
-endif()
 
 if(${PROJECT_NAME}_bench)
   include(bench/list.cmake)
@@ -74,3 +71,37 @@ endif()
 if(${PROJECT_NAME}_docs)
   include(cmake/doxygen.cmake)
 endif()
+
+
+# Packaging {{{1
+
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")
+list(APPEND CPACK_GENERATOR "TGZ")
+
+# library
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE
+  DESTINATION lib
+  COMPONENT libraries
+)
+list(APPEND CPACK_COMPONENTS_ALL libraries)
+
+# headers
+get_target_property(sources ${PROJECT_NAME} SOURCES)
+foreach(source ${sources})
+  get_filename_component(source_ext ${source} EXT)
+  if(${source_ext} STREQUAL ".hpp")
+    get_filename_component(source_path ${source} PATH)
+    string(REPLACE "${CMAKE_BINARY_DIR}/" "" source_path ${source_path})
+    install(FILES ${source}
+      DESTINATION include/${source_path}
+      COMPONENT headers
+    )
+  endif()
+endforeach()
+list(APPEND CPACK_COMPONENT_ALL headers)
+set(CPACK_COMPONENT_HEADERS_DEPENDS libraries)
+
+include(CPack)
