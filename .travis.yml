@@ -40,11 +40,11 @@ script: |
 after_success: |
   source scripts/travis_success.sh
 
-deploy:
-  - provider: pages
-    local-dir: docs
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN
-    on:
-      branch: master
-      condition: $ENABLE_DOCS = yes
+#deploy:
+#  - provider: pages
+#    local-dir: docs
+#    skip-cleanup: true
+#    github-token: $GITHUB_TOKEN
+#    on:
+#      branch: master
+#      condition: $ENABLE_DOCS = yes
