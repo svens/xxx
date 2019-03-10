@@ -32,6 +32,7 @@ addons:
       - g++-8
       - ninja-build
       - doxygen
+      - graphviz
   homebrew:
     packages:
       - gcc
