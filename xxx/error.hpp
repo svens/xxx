@@ -12,8 +12,9 @@
 __xxx_begin
 
 
-#define __xxx_errc(impl) \
-  impl(temporary_error, "temporary error")
+#define __xxx_errc(X_) \
+  X_(__0, "internal placeholder for not an error") \
+  X_(temporary_error, "temporary error")
 
 
 /**
@@ -21,10 +22,9 @@ __xxx_begin
  */
 enum class errc
 {
-  __xxx_errc_0 = 0,
-  #define __xxx_errc_impl(code, message) code,
-    __xxx_errc(__xxx_errc_impl)
-  #undef __xxx_errc_impl
+  #define __xxx_errc_list(code, message) code,
+    __xxx_errc(__xxx_errc_list)
+  #undef __xxx_errc_list
 };
 
 

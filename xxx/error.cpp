@@ -12,9 +12,9 @@ constexpr std::string_view to_string_view (errc ec) noexcept
 {
   switch (ec)
   {
-    #define __xxx_errc_impl(code, message) case xxx::errc::code: return message;
-      __xxx_errc(__xxx_errc_impl)
-    #undef __xxx_errc_impl
+    #define __xxx_errc_case(code, message) case xxx::errc::code: return message;
+      __xxx_errc(__xxx_errc_case)
+    #undef __xxx_errc_case
 
     default:
       return "unknown";

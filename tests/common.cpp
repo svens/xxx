@@ -9,25 +9,26 @@
 #include <cstdio>
 #include <dlfcn.h>
 
+auto get_libc_malloc ()
+{
+  if (auto fn = dlsym(RTLD_NEXT, "malloc"))
+  {
+    return reinterpret_cast<void*(*)(size_t)>(fn);
+  }
+  std::terminate();
+}
+
 void *malloc (size_t size)
 {
-  static void *(*libc_malloc)(size_t) = nullptr;
+  auto libc_malloc = get_libc_malloc();
 
-  if (!libc_malloc)
+  if (xxx_test::enforce_bad_alloc::fail)
   {
-    libc_malloc = (decltype(libc_malloc))dlsym(RTLD_NEXT, "malloc");
-    if (!libc_malloc)
-    {
-      std::terminate();
-    }
+    xxx_test::enforce_bad_alloc::fail = false;
+    return nullptr;
   }
 
-  if (!xxx_test::enforce_bad_alloc::fail)
-  {
-    return (*libc_malloc)(size);
-  }
-
-  return nullptr;
+  return (*libc_malloc)(size);
 }
 
 #endif
@@ -35,11 +36,12 @@ void *malloc (size_t size)
 
 void *operator new (size_t size)
 {
-  if (!xxx_test::enforce_bad_alloc::fail)
+  if (xxx_test::enforce_bad_alloc::fail)
   {
-    return std::malloc(size);
+    xxx_test::enforce_bad_alloc::fail = false;
+    throw std::bad_alloc();
   }
-  throw std::bad_alloc();
+  return std::malloc(size);
 }
 
 
