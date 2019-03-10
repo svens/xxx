@@ -7,7 +7,6 @@ git:
 
 matrix:
   include:
-    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Coverage ENABLE_DOCS=yes }
     - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Debug }
     - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Release }
     - { os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Debug }
@@ -18,6 +17,13 @@ matrix:
     - { os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Release }
     - { os: windows, env: BUILD_TYPE=Debug }
     - { os: windows, env: BUILD_TYPE=Release }
+    - os: linux
+      dist: xenial
+      compiler: gcc
+      env:
+        - BUILD_TYPE=Coverage
+        - ENABLE_DOCS=yes
+        - secure: Kry+mBD1VyMIB7x3lP4AjTnbKrbkND8uQ+BF/UBpRoXf5tT6U5KhVRAXlfUa8/BuqnvCYWD6G7qYpAJjk4wzeKqVbIvLM+/3bmgJDHloN9optQpS3CZR2n+Tk8MkOrxnZI1vVGRjH9ysjjum0ZX5kEeQ4sABtQ142VTy5k8TBG1HTP8DnJYbaySbG3h4gi7PWEioayvIPA7a+qVqnEEe59RPBNb9FhuPEH6/56dqTTOEFxJOQ9xkx7nGdhhZDBxE3lR3JpyNc9e3gxoULtyyaIhaTxZ2WSz3eX/U+/EboxNYhYPkv1DSCAToJku0F/7IEiegLOm0KXtaZtoDkqN4ZJf5ez6a4pfMkq2VgPlzDRTctc0bYrn8vlU47FVXTOt8vnppHGpMR9BfIeRjGSil+sDb+ydC0Gx1pl1TV5XLMQ7VphxREwt3xFIJ63t45olMWkBvDitaO5IxDnz8vkLb9rvJJWuIIrgtulSek9csinqm5iYzlLnaJL3ijnc5f+ipHtp/y4EPl/h62Y1tynRU0SE/2hdZ3XNuD1EXTugaSnVflBGb+iEhWCcwJ+ZVFj/d6NC3slVgR7UXpG20WpBZkdwdMdJXFAfIemfMKNM02OqeI6+7efd4f3oeDDwuHHys90pmCxRHJG09e2hyrbWBuYRKcdisNrBpBsqzEsZu388=
 
 addons:
   apt:
@@ -40,11 +46,11 @@ script: |
 after_success: |
   source scripts/travis_success.sh
 
-#deploy:
-#  - provider: pages
-#    local-dir: docs
-#    skip-cleanup: true
-#    github-token: $GITHUB_TOKEN
-#    on:
-#      branch: master
-#      condition: $ENABLE_DOCS = yes
+deploy:
+  - provider: pages
+    local-dir: docs
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    on:
+      branch: master
+      condition: $ENABLE_DOCS = yes
