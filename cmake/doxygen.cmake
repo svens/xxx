@@ -12,5 +12,5 @@ if(DOXYGEN_FOUND)
     COMMENT "Generating documentation"
   )
 else()
-  message(WARNING "Disable documentation (Doxygen not found")
+  message(STATUS "Disable documentation")
 endif()
