@@ -17,11 +17,19 @@ case "${TRAVIS_OS_NAME}-${CC}" in
     ;;
 esac
 
-cmake . -G "${CMAKE_BUILD_GENERATOR}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+if test "${ENABLE_DOCS}" = "yes"; then
+  export CMAKE_OPTS="-Dxxx_docs=yes"
+fi
+
+cmake . -G "${CMAKE_BUILD_GENERATOR}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ${CMAKE_OPTS}
 cmake --build . --config ${BUILD_TYPE}
 
 if test "${BUILD_TYPE}" = "Coverage"; then
   travis_wait cmake --build . --target xxx-cov
 else
   ctest --output-on-failure
+fi
+
+if test "${ENABLE_DOCS}" = "yes"; then
+  cmake --build . --target xxx-doc
 fi

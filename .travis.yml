@@ -7,7 +7,7 @@ git:
 
 matrix:
   include:
-    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Coverage }
+    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Coverage ENABLE_DOCS=yes }
     - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Debug }
     - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Release }
     - { os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Debug }
@@ -41,11 +41,10 @@ after_success: |
   source scripts/travis_success.sh
 
 deploy:
-  # FYI: doc generation and deployment piggy-backs on Coverage build
   - provider: pages
     local-dir: docs
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
     on:
       branch: master
-      condition: $BUILD_TYPE = Coverage
+      condition: $ENABLE_DOCS = yes

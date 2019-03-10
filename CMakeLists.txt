@@ -9,7 +9,7 @@ message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION}")
 
 option(${PROJECT_NAME}_unittests "Build unittests" ON)
 option(${PROJECT_NAME}_bench "Build benchmarking application" OFF)
-option(${PROJECT_NAME}_docs "Generate documentation" ON)
+option(${PROJECT_NAME}_docs "Generate documentation" OFF)
 
 if(CMAKE_BUILD_TYPE MATCHES Coverage)
   set(CMAKE_BUILD_TYPE "Debug")
