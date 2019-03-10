@@ -1,6 +1,7 @@
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
+  message(STATUS "Enable documentation")
   configure_file(
     ${PROJECT_SOURCE_DIR}/cmake/Doxyfile.in
     ${CMAKE_BINARY_DIR}/Doxyfile
@@ -11,5 +12,5 @@ if(DOXYGEN_FOUND)
     COMMENT "Generating documentation"
   )
 else()
-  message(WARNING "Doxygen not found, skipping documentation generation")
+  message(WARNING "Disable documentation (Doxygen not found")
 endif()

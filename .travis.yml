@@ -25,6 +25,7 @@ addons:
     packages:
       - g++-8
       - ninja-build
+      - doxygen
   homebrew:
     packages:
       - gcc
@@ -38,3 +39,13 @@ script: |
 
 after_success: |
   source scripts/travis_success.sh
+
+deploy:
+  # FYI: doc generation and deployment piggy-backs on Coverage build
+  - provider: pages
+    local-dir: docs
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    on:
+      branch: master
+      condition: $BUILD_TYPE = Coverage

@@ -9,7 +9,7 @@ message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION}")
 
 option(${PROJECT_NAME}_unittests "Build unittests" ON)
 option(${PROJECT_NAME}_bench "Build benchmarking application" OFF)
-option(${PROJECT_NAME}_docs "Generate documentation" OFF)
+option(${PROJECT_NAME}_docs "Generate documentation" ON)
 
 if(CMAKE_BUILD_TYPE MATCHES Coverage)
   set(CMAKE_BUILD_TYPE "Debug")
@@ -62,9 +62,15 @@ set_source_files_properties(${CMAKE_BINARY_DIR}/${PROJECT_NAME}/config.hpp
 # Targets {{{1
 
 include(${PROJECT_NAME}/list.cmake)
+
 if(${PROJECT_NAME}_unittests)
   include(tests/list.cmake)
 endif()
+
 if(${PROJECT_NAME}_bench)
   include(bench/list.cmake)
+endif()
+
+if(${PROJECT_NAME}_docs)
+  include(cmake/doxygen.cmake)
 endif()
