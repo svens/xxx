@@ -61,6 +61,7 @@ if(COVERAGE)
     COMMAND ${CMAKE_COMMAND} --build . --target test
     COMMAND ${LCOV} ${LCOV_ARGS} --capture --no-external --derive-func-data --output-file ${PROJECT_NAME}-tests.info
     COMMAND ${LCOV} ${LCOV_ARGS} --add-tracefile ${PROJECT_NAME}-base.info --add-tracefile ${PROJECT_NAME}-tests.info --output-file ${PROJECT_NAME}.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --remove ${PROJECT_NAME}.info '${PROJECT_SOURCE_DIR}/tests/*' '${PROJECT_SOURCE_DIR}/tps/*' --output-file ${PROJECT_NAME}.info
     COMMAND ${LCOV} ${LCOV_ARGS} --list ${PROJECT_NAME}.info
     COMMAND ${LCOV} ${LCOV_ARGS} --summary ${PROJECT_NAME}.info
   )
