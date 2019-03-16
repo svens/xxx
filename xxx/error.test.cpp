@@ -11,7 +11,7 @@ TEST_CASE("error")
   SECTION("errc")
   {
     #define __xxx_errc_value(code, message) xxx::errc::code,
-    std::error_code ec = GENERATE(values({__xxx_errc(__xxx_errc_value)}));
+      std::error_code ec = GENERATE(values({__xxx_errc(__xxx_errc_value)}));
     #undef __xxx_errc_value
     CAPTURE(ec);
 

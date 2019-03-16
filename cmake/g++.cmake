@@ -1,23 +1,13 @@
-#
-# GNU G++ options
-#
+set(max_warning_flags -Werror -Wall -Wextra -Weffc++ -pedantic)
 
-set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -Weffc++ -pedantic -pipe")
-set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -ggdb -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O3")
-
+add_compile_options(-pipe)
 if("${CMAKE_GENERATOR}" STREQUAL "Ninja")
   # Ninja redirects build output and prints it only on error
   # Redirection strips colorization, so let's force it here
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
+  add_compile_options(-fdiagnostics-color)
 endif()
 
-
-#
-# Test coverage related stuff
-#
-
-if(COVERAGE)
+if(Coverage)
   message(STATUS "Unittests coverage build")
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
@@ -28,7 +18,7 @@ if(COVERAGE)
   endif()
   set(LCOV_ARGS
     --quiet
-    --base-directory ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}
+    --base-directory ${CMAKE_SOURCE_DIR}
     --directory .
     --rc lcov_branch_coverage=1
   )
@@ -49,25 +39,25 @@ if(COVERAGE)
     message(FATAL_ERROR "Executable genhtml not found")
   endif()
 
-  add_custom_target(${PROJECT_NAME}-cov
+  add_custom_target(${CMAKE_PROJECT_NAME}-cov
     DEPENDS unittests
     COMMENT "Generate coverage information"
 
     # Initialize coverage generation
     COMMAND ${LCOV} ${LCOV_ARGS} --zerocounters
-    COMMAND ${LCOV} ${LCOV_ARGS} --initial --capture --no-external --derive-func-data --output-file ${PROJECT_NAME}-base.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --initial --capture --no-external --derive-func-data --output-file ${CMAKE_PROJECT_NAME}-base.info
 
     # Run and extract
     COMMAND ${CMAKE_COMMAND} --build . --target test
-    COMMAND ${LCOV} ${LCOV_ARGS} --capture --no-external --derive-func-data --output-file ${PROJECT_NAME}-tests.info
-    COMMAND ${LCOV} ${LCOV_ARGS} --add-tracefile ${PROJECT_NAME}-base.info --add-tracefile ${PROJECT_NAME}-tests.info --output-file ${PROJECT_NAME}.info
-    COMMAND ${LCOV} ${LCOV_ARGS} --remove ${PROJECT_NAME}.info '*.test.?pp' '${PROJECT_SOURCE_DIR}/tps/*' --output-file ${PROJECT_NAME}.info
-    COMMAND ${LCOV} ${LCOV_ARGS} --list ${PROJECT_NAME}.info
-    COMMAND ${LCOV} ${LCOV_ARGS} --summary ${PROJECT_NAME}.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --capture --no-external --derive-func-data --output-file ${CMAKE_PROJECT_NAME}-tests.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --add-tracefile ${CMAKE_PROJECT_NAME}-base.info --add-tracefile ${CMAKE_PROJECT_NAME}-tests.info --output-file ${CMAKE_PROJECT_NAME}.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --remove ${CMAKE_PROJECT_NAME}.info '*.test.?pp' '${PROJECT_SOURCE_DIR}/extern/*' --output-file ${CMAKE_PROJECT_NAME}.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --list ${CMAKE_PROJECT_NAME}.info
+    COMMAND ${LCOV} ${LCOV_ARGS} --summary ${CMAKE_PROJECT_NAME}.info
   )
 
-  add_custom_command(TARGET ${PROJECT_NAME}-cov POST_BUILD
+  add_custom_command(TARGET ${CMAKE_PROJECT_NAME}-cov POST_BUILD
     COMMENT "Open ${CMAKE_BINARY_DIR}/cov/index.html in your browser"
-    COMMAND ${GENHTML} --rc lcov_branch_coverage=1 -q --demangle-cpp --legend --output-directory cov ${PROJECT_NAME}.info
+    COMMAND ${GENHTML} --rc lcov_branch_coverage=1 -q --demangle-cpp --legend --output-directory cov ${CMAKE_PROJECT_NAME}.info
   )
 endif()
