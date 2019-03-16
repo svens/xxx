@@ -1,10 +1,7 @@
-list(APPEND xxx_api_sources
+list(APPEND xxx_sources
   xxx/__bits/build.hpp
-  xxx/error.hpp
-)
-
-list(APPEND xxx_impl_sources
   xxx/__bits/platform_sdk.hpp
+  xxx/error.hpp
   xxx/error.cpp
 )
 

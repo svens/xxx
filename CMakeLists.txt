@@ -50,10 +50,7 @@ endif()
 
 include(xxx/list.cmake)
 
-add_library(xxx
-  ${xxx_api_sources}
-  ${xxx_impl_sources}
-)
+add_library(xxx ${xxx_sources})
 add_library(xxx::xxx ALIAS xxx)
 target_include_directories(xxx
   PUBLIC
@@ -122,12 +119,14 @@ list(APPEND CPACK_GENERATOR "TGZ")
 list(APPEND CPACK_SOURCE_GENERATOR "TGZ")
 
 # headers
-foreach(file ${xxx_api_sources})
-  get_filename_component(path ${file} PATH)
-  install(FILES ${file}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${path}
-    COMPONENT dev
-  )
+foreach(file ${xxx_sources})
+  if(${file} MATCHES ".hpp$")
+    get_filename_component(path ${file} PATH)
+    install(FILES ${file}
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${path}
+      COMPONENT dev
+    )
+  endif()
 endforeach()
 list(APPEND CPACK_COMPONENTS_ALL dev)
 
