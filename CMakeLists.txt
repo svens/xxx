@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
-cmake_policy(SET CMP0076 NEW)
+cmake_minimum_required(VERSION 3.2)
 
 project(xxx)
 include(cmake/project_version.cmake)
@@ -51,12 +50,11 @@ endif()
 
 include(xxx/list.cmake)
 
-add_library(xxx)
-add_library(xxx::xxx ALIAS xxx)
-target_sources(xxx
-  INTERFACE ${xxx_api_sources}
-  PRIVATE ${xxx_impl_sources}
+add_library(xxx
+  ${xxx_api_sources}
+  ${xxx_impl_sources}
 )
+add_library(xxx::xxx ALIAS xxx)
 target_include_directories(xxx
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
