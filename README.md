@@ -14,6 +14,8 @@ Provides tooling for:
 To get started, clone this repository, get rid of existing .git directory,
 search and replace strings `xxx` and `XXX` with new project name.
 
+Also, in [.travis.yml](https://github.com/svens/xxx/blob/d6f856589eef3e43abf606a59ce9e519aa29d8d2/.travis.yml#L26) replace GITHUB_TOKEN secure variable with new repository-specific value to deploy gh-pages on master builds. For encrypted environment variables, see [Encryption keys](https://docs.travis-ci.com/user/encryption-keys/) guide.
+
 
 ## Compiling and installing
 
