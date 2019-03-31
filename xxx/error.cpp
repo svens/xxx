@@ -1,5 +1,4 @@
 #include <xxx/error.hpp>
-#include <xxx/__bits/build.hpp>
 #include <string>
 
 
@@ -29,12 +28,12 @@ const std::error_category &error_category () noexcept
   struct error_category_impl
     : public std::error_category
   {
-    const char *name () const noexcept final
+    [[nodiscard]] const char *name () const noexcept final
     {
       return "xxx";
     }
 
-    std::string message (int ec) const final
+    [[nodiscard]] std::string message (int ec) const final
     {
       return std::string{to_string_view(static_cast<errc>(ec))};
     }

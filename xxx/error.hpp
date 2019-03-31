@@ -5,7 +5,7 @@
  * XXX library error codes
  */
 
-#include <xxx/__bits/build.hpp>
+#include <xxx/__bits/lib.hpp>
 #include <system_error>
 
 

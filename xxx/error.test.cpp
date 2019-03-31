@@ -28,7 +28,7 @@ TEST_CASE("error")
   SECTION("message_bad_alloc")
   {
     std::error_code ec = xxx::errc::__0;
-    xxx_test::enforce_bad_alloc x;
+    xxx_test::bad_alloc_once x;
     CHECK_THROWS_AS(ec.message(), std::bad_alloc);
   }
 

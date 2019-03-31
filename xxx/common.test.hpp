@@ -2,21 +2,33 @@
 
 #define CATCH_CONFIG_FAST_COMPILE
 #include <catch2/catch.hpp>
+#include <string>
 
 
 namespace xxx_test {
 
 
-struct enforce_bad_alloc
+inline std::string case_name ()
+{
+  return Catch::getResultCapture().getCurrentTestName();
+}
+
+
+bool on_appveyor_ci ();
+bool on_travis_ci ();
+inline const bool on_ci = on_appveyor_ci() || on_travis_ci();
+
+
+struct bad_alloc_once
 {
   static inline bool fail = false;
 
-  enforce_bad_alloc () noexcept
+  bad_alloc_once () noexcept
   {
     fail = true;
   }
 
-  ~enforce_bad_alloc () noexcept
+  ~bad_alloc_once () noexcept
   {
     fail = false;
   }
