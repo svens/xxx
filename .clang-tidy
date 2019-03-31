@@ -1,1 +1,16 @@
-Checks: '*,-llvm-include-order,-fuchsia-default-arguments'
+WarningsAsErrors: '*'
+
+Checks: >-
+  -*,
+  bugprone-*,
+  cert-*,
+    -cert-err58-cpp,
+  clang-analyzer-*,
+  hicpp-*,
+    -hicpp-avoid-c-arrays,
+    -hicpp-signed-bitwise,
+    -hicpp-vararg,
+  misc-*,
+  modernize-*,
+    -modernize-avoid-c-arrays,
+  performance-*
