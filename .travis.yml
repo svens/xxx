@@ -7,17 +7,18 @@ git:
 
 matrix:
   include:
-    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Debug }
-    - { os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Release }
-    - { os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Debug }
-    - { os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Release }
-    - { os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Debug }
-    - { os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Release }
-    - { os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Debug }
-    - { os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Release }
-    - { os: windows, env: BUILD_TYPE=Debug }
-    - { os: windows, env: BUILD_TYPE=Release }
-    - os: linux
+    - { name: "Linux / gcc / Debug", os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Debug }
+    - { name: "Linux / gcc / Release", os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Release }
+    - { name: "Linux / clang / Debug", os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Debug }
+    - { name: "Linux / clang / Release", os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Release }
+    - { name: "Macos / gcc / Debug", os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Debug }
+    - { name: "Macos / gcc / Release", os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Release }
+    - { name: "Macos / clang / Debug", os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Debug }
+    - { name: "Macos / clang / Release", os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Release }
+    - { name: "Windows / MSVC / Debug", os: windows, env: BUILD_TYPE=Debug }
+    - { name: "Windows / MSVC / Release", os: windows, env: BUILD_TYPE=Release }
+    - name: "Linux / gcc / Coverage"
+      os: linux
       dist: xenial
       compiler: gcc
       env:
