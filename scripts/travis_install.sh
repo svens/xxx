@@ -1,6 +1,8 @@
-if test "${TRAVIS_OS_NAME}" = "osx"; then
-  brew link gcc || true
-fi
+case "${TRAVIS_OS_NAME}" in
+  osx)
+    brew link gcc || true
+    ;;
+esac
 
 if test "${BUILD_TYPE}" = "Coverage"; then
   curl -sLo lcov-master.tar.gz https://github.com/linux-test-project/lcov/archive/master.tar.gz

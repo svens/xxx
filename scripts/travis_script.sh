@@ -29,7 +29,3 @@ if test "${BUILD_TYPE}" = "Coverage"; then
 else
   ctest --output-on-failure
 fi
-
-if test "${ENABLE_DOCS}" = "yes"; then
-  cmake --build . --target xxx-doc
-fi
