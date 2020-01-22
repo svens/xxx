@@ -5,7 +5,7 @@ group: travis_latest
 git:
   submodules: false
 
-matrix:
+jobs:
   include:
     - { name: "Linux / gcc / Debug", os: linux, dist: bionic, compiler: gcc, env: BUILD_TYPE=Debug }
     - { name: "Linux / gcc / Release", os: linux, dist: bionic, compiler: gcc, env: BUILD_TYPE=Release }
@@ -50,9 +50,9 @@ after_success: |
 
 deploy:
   - provider: pages
-    local-dir: docs
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN
+    local_dir: docs
+    skip_cleanup: true
+    token: $GITHUB_TOKEN
     on:
       branch: master
       condition: $ENABLE_DOCS = yes
