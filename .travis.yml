@@ -28,7 +28,6 @@ jobs:
 
 addons:
   apt:
-    sources: ubuntu-toolchain-r-test
     packages:
       - g++-8
       - ninja-build
