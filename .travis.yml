@@ -5,21 +5,21 @@ group: travis_latest
 git:
   submodules: false
 
-matrix:
+jobs:
   include:
-    - { name: "Linux / gcc / Debug", os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Debug }
-    - { name: "Linux / gcc / Release", os: linux, dist: xenial, compiler: gcc, env: BUILD_TYPE=Release }
-    - { name: "Linux / clang / Debug", os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Debug }
-    - { name: "Linux / clang / Release", os: linux, dist: xenial, compiler: clang, env: BUILD_TYPE=Release }
-    - { name: "Macos / gcc / Debug", os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Debug }
-    - { name: "Macos / gcc / Release", os: osx, osx_image: xcode10.1, compiler: gcc, env: BUILD_TYPE=Release }
-    - { name: "Macos / clang / Debug", os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Debug }
-    - { name: "Macos / clang / Release", os: osx, osx_image: xcode10.1, compiler: clang, env: BUILD_TYPE=Release }
+    - { name: "Linux / gcc / Debug", os: linux, dist: bionic, compiler: gcc, env: BUILD_TYPE=Debug }
+    - { name: "Linux / gcc / Release", os: linux, dist: bionic, compiler: gcc, env: BUILD_TYPE=Release }
+    - { name: "Linux / clang / Debug", os: linux, dist: bionic, compiler: clang, env: BUILD_TYPE=Debug }
+    - { name: "Linux / clang / Release", os: linux, dist: bionic, compiler: clang, env: BUILD_TYPE=Release }
+    - { name: "Macos / gcc / Debug", os: osx, osx_image: xcode11.3, compiler: gcc, env: BUILD_TYPE=Debug }
+    - { name: "Macos / gcc / Release", os: osx, osx_image: xcode11.3, compiler: gcc, env: BUILD_TYPE=Release }
+    - { name: "Macos / clang / Debug", os: osx, osx_image: xcode11.3, compiler: clang, env: BUILD_TYPE=Debug }
+    - { name: "Macos / clang / Release", os: osx, osx_image: xcode11.3, compiler: clang, env: BUILD_TYPE=Release }
     - { name: "Windows / MSVC / Debug", os: windows, env: BUILD_TYPE=Debug }
     - { name: "Windows / MSVC / Release", os: windows, env: BUILD_TYPE=Release }
     - name: "Linux / gcc / Coverage"
       os: linux
-      dist: xenial
+      dist: bionic
       compiler: gcc
       env:
         - BUILD_TYPE=Coverage
@@ -28,7 +28,6 @@ matrix:
 
 addons:
   apt:
-    sources: ubuntu-toolchain-r-test
     packages:
       - g++-8
       - ninja-build
@@ -50,9 +49,9 @@ after_success: |
 
 deploy:
   - provider: pages
-    local-dir: docs
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN
+    local_dir: docs
+    skip_cleanup: true
+    token: $GITHUB_TOKEN
     on:
       branch: master
       condition: $ENABLE_DOCS = yes
