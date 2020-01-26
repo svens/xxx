@@ -30,6 +30,7 @@ addons:
   apt:
     packages:
       - g++-8
+      - clang-9
       - ninja-build
       - doxygen
       - graphviz

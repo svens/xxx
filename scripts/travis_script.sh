@@ -1,19 +1,32 @@
 case "${TRAVIS_OS_NAME}-${CC}" in
-  windows-*)
-    export CMAKE_BUILD_GENERATOR="Visual Studio 15 2017 Win64"
+  linux-clang)
+    export CC=clang-9
+    export CXX=clang++-9
+    export CMAKE_BUILD_GENERATOR=Ninja
     ;;
 
-  *-clang)
+  linux-gcc)
+    export CC=gcc-8
+    export CXX=g++-8
+    export COV=gcov-8
+    export CMAKE_BUILD_GENERATOR=Ninja
+    ;;
+
+  osx-clang)
     export CC=clang
     export CXX=clang++
     export CMAKE_BUILD_GENERATOR=Ninja
     ;;
 
-  *-gcc)
-    export CC=gcc-8
-    export CXX=g++-8
-    export COV=gcov-8
+  osx-gcc)
+    export CC=gcc-9
+    export CXX=g++-9
+    export COV=gcov-9
     export CMAKE_BUILD_GENERATOR=Ninja
+    ;;
+
+  windows-*)
+    export CMAKE_BUILD_GENERATOR="Visual Studio 15 2017 Win64"
     ;;
 esac
 
