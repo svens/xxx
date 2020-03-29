@@ -25,13 +25,13 @@ include(GNUInstallDirs)
 
 # compiler
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	include(cmake/g++.cmake)
+  include(cmake/g++.cmake)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	include(cmake/clang++.cmake)
+  include(cmake/clang++.cmake)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	include(cmake/msvc.cmake)
+  include(cmake/msvc.cmake)
 else()
-	message(WARNING "Unknown compiler")
+  message(WARNING "Unknown compiler")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
