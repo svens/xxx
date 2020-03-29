@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.8)
 
-project(xxx)
+project(xxx LANGUAGES CXX)
 include(cmake/project_version.cmake)
 message(STATUS "${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 
@@ -24,15 +24,19 @@ endif()
 include(GNUInstallDirs)
 
 # compiler
-if(CMAKE_COMPILER_IS_GNUCXX)
-  include(cmake/g++.cmake)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	include(cmake/g++.cmake)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  include(cmake/clang++.cmake)
-elseif(MSVC)
-  include(cmake/msvc.cmake)
+	include(cmake/clang++.cmake)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	include(cmake/msvc.cmake)
 else()
-  message(WARNING "Unknown compiler")
+	message(WARNING "Unknown compiler")
 endif()
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # host
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -57,9 +61,7 @@ target_include_directories(xxx
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-target_compile_features(xxx PUBLIC cxx_std_17)
 target_compile_options(xxx PRIVATE ${max_warning_flags})
-set_target_properties(xxx PROPERTIES CXX_EXTENSIONS OFF)
 
 include(cmake/tidy.cmake)
 tidy(xxx)
