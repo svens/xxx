@@ -1,11 +1,11 @@
 # Template for C++ library project
 
-[![Build Status](https://travis-ci.org/svens/xxx.svg?branch=master)](https://travis-ci.org/svens/xxx)
-[![Coverage](https://coveralls.io/repos/github/svens/xxx/badge.svg?branch=master)](https://coveralls.io/github/svens/xxx?branch=master)
+[![Build](https://github.com/svens/xxx/workflows/Build/badge.svg)](https://github.com/svens/xxx/actions?query=workflow:Build)
+[![Coverage](https://coveralls.io/repos/github/svens/xxx/badge.svg)](https://coveralls.io/github/svens/xxx)
 
 Provides tooling for:
 * Linux/MacOS/Windows builds using g++, clang++ and MSVC
-* CI: [Travis-CI](https://travis-ci.com)
+* CI: [GitHub Actions](https://github.com/features/actions)
 * Unittesting: [Catch2](https://github.com/catchorg/Catch2)
 * Code coverage: [gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov.html)/[lcov](https://github.com/linux-test-project/lcov), [coveralls](https://docs.coveralls.io)
 * Documentation: [Doxygen](http://www.doxygen.nl)
@@ -13,8 +13,6 @@ Provides tooling for:
 
 To get started, clone this repository, get rid of existing .git directory,
 search and replace strings `xxx` and `XXX` with new project name.
-
-Also, in [.travis.yml](https://github.com/svens/xxx/blob/d6f856589eef3e43abf606a59ce9e519aa29d8d2/.travis.yml#L26) replace GITHUB_TOKEN secure variable with new repository-specific value to deploy gh-pages on master builds. For encrypted environment variables, see [Encryption keys](https://docs.travis-ci.com/user/encryption-keys/) guide.
 
 
 ## Compiling and installing
@@ -33,5 +31,4 @@ The source tree is organised as follows:
     |  `- module    ... per module headers/sources/tests
     |- bench        Benchmarks
     |- cmake        CMake modules
-    |- extern       External code as git submodules
-    `- scripts      Helper scripts
+    `- extern       External code as git submodules

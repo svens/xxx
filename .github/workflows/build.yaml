@@ -1,0 +1,75 @@
+name: Build
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}-latest
+
+    strategy:
+      matrix:
+        os: [macos, ubuntu]
+        compiler: [clang, gcc]
+        build_type: [Debug, Release]
+        include:
+          - { os: windows, build_type: Debug }
+          - { os: windows, build_type: Release }
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup devenv
+        run: |
+          case "${{ matrix.compiler }}" in
+            clang)
+              echo '::set-env name=CC::clang'
+              echo '::set-env name=CXX::clang++'
+              ;;
+            gcc)
+              echo '::set-env name=CC::gcc-9'
+              echo '::set-env name=CXX::g++-9'
+              ;;
+          esac
+
+      - name: Generate buildsystem
+        run: cmake . -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        run: cmake --build . --config ${{ matrix.build_type }}
+
+      - name: Test
+        run: ctest --build-config ${{ matrix.build_type }} --output-on-failure
+
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+
+    env:
+      CC: gcc-9
+      CXX: g++-9
+      COV: gcov-9
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup devenv
+        run: |
+          # TODO: 1st install messes things up, 2nd fixes
+          # Seems similar to https://github.com/aws/homebrew-tap/issues/130
+          brew install lcov
+          brew install lcov
+
+      - name: Generate buildsystem
+        run: cmake . -DCMAKE_BUILD_TYPE=Coverage
+
+      - name: Generate test coverage
+        run: cmake --build . --target xxx-cov
+
+      - uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: xxx.info
