@@ -50,3 +50,24 @@ jobs:
         run: |
           cmake --build . --config Release
           ctest --build-config Release --output-on-failure
+
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure buildsystem
+        run: |
+          brew install lcov
+          brew install lcov
+          CC=gcc-9 CXX=g++-9 COV=gcov-9 cmake . -DCMAKE_BUILD_TYPE=Coverage
+
+      - name: Generate test coverage
+        run: cmake --build . --target xxx-cov
+
+      - uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: xxx.info
