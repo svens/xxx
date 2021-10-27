@@ -9,9 +9,7 @@ option(xxx_bench "Build benchmarks" OFF)
 option(xxx_doc "Generate documentation" OFF)
 option(xxx_samples "Build samples" OFF)
 
-if(CMAKE_BUILD_TYPE MATCHES "Coverage")
-	set(CMAKE_BUILD_TYPE "Debug")
-	set(Coverage ON)
+if(NOT "${CMAKE_BUILD_TYPE};${CMAKE_CONFIGURATION_TYPES}" MATCHES ".*Coverage.*")
 	set(xxx_test ON)
 endif()
 
@@ -32,7 +30,6 @@ if(xxx_test)
 	cxx_test(xxx_test
 		SOURCES ${xxx_test_sources}
 		LIBRARIES ${xxx_libraries}
-		COVERAGE ${Coverage}
 		COVERAGE_BASE_DIR ${CMAKE_SOURCE_DIR}/xxx
 	)
 endif()
