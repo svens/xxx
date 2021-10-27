@@ -1,0 +1,28 @@
+name: Documentation
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Generate
+        run: |
+          sudo apt-get install --yes g++-10 cmake doxygen graphviz
+          CC=gcc-10 CXX=g++-10 cmake . -Dxxx_doc=yes -Dxxx_test=no
+          cmake --build . --target xxx-doc
+
+      - name: Publish
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          force_orphan: true
+          publish_branch: gh-pages
