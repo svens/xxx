@@ -1,7 +1,6 @@
-#pragma once
+#pragma once // -*- C++ -*-
 
-#define CATCH_CONFIG_FAST_COMPILE
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <string>
 
 
@@ -10,28 +9,27 @@ namespace xxx_test {
 
 inline std::string case_name ()
 {
-  return Catch::getResultCapture().getCurrentTestName();
+	return Catch::getResultCapture().getCurrentTestName();
 }
 
 
-bool on_appveyor_ci ();
-bool on_travis_ci ();
-inline const bool on_ci = on_appveyor_ci() || on_travis_ci();
+bool has_ci_environment_variable ();
+inline const bool on_ci = has_ci_environment_variable();
 
 
 struct bad_alloc_once
 {
-  static inline bool fail = false;
+	static inline bool fail = false;
 
-  bad_alloc_once () noexcept
-  {
-    fail = true;
-  }
+	bad_alloc_once () noexcept
+	{
+		fail = true;
+	}
 
-  ~bad_alloc_once () noexcept
-  {
-    fail = false;
-  }
+	~bad_alloc_once () noexcept
+	{
+		fail = false;
+	}
 };
 
 

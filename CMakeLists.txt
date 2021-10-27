@@ -1,142 +1,61 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.12)
 
 project(xxx LANGUAGES CXX)
 include(cmake/project_version.cmake)
 message(STATUS "${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 
+option(xxx_test "Build tests" ON)
+option(xxx_bench "Build benchmarks" OFF)
+option(xxx_doc "Generate documentation" OFF)
+option(xxx_samples "Build samples" OFF)
 
-# User settings {{{1
-
-option(xxx_unittests "Build unittests" ON)
-option(xxx_benchmarks "Build benchmarking application" OFF)
-option(xxx_docs "Generate documentation" OFF)
-
-if(CMAKE_BUILD_TYPE MATCHES Coverage)
-  set(CMAKE_BUILD_TYPE "Debug")
-  set(Coverage ON)
-  set(xxx_unittests ON)
-  set(xxx_benchmarks OFF)
+if(CMAKE_BUILD_TYPE MATCHES "Coverage")
+	set(CMAKE_BUILD_TYPE "Debug")
+	set(Coverage ON)
+	set(xxx_test ON)
 endif()
 
-
-# Build settings {{{1
-
-include(GNUInstallDirs)
-
-# compiler
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  include(cmake/g++.cmake)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  include(cmake/clang++.cmake)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  include(cmake/msvc.cmake)
-else()
-  message(WARNING "Unknown compiler")
-endif()
-
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# host
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  include(cmake/macos.cmake)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-  include(cmake/linux.cmake)
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-  include(cmake/windows.cmake)
-else()
-  message(WARNING "Unknown system")
-endif()
-
-
-# Targets {{{1
+include(cmake/cxx.cmake)
 
 include(xxx/list.cmake)
-
-add_library(xxx ${xxx_sources})
-add_library(xxx::xxx ALIAS xxx)
-target_include_directories(xxx
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+cxx_library(xxx
+	SOURCES ${xxx_sources}
 )
-target_compile_options(xxx PRIVATE ${max_warning_flags})
 
-include(cmake/tidy.cmake)
-tidy(xxx)
-include(cmake/iwyu.cmake)
-iwyu(xxx)
+set(xxx_libraries xxx::xxx)
 
-
-# Tests
-if(xxx_unittests)
-  message(STATUS "Enable unittests")
-  enable_testing()
-  include(cmake/catchorg_catch2.cmake)
-  add_executable(unittests ${xxx_unittests_sources})
-  target_compile_options(unittests PRIVATE ${max_warning_flags})
-  target_link_libraries(unittests xxx::xxx Catch2::Catch2)
-  include(extern/catchorg_catch2/contrib/Catch.cmake)
-  catch_discover_tests(unittests)
+if(xxx_test)
+	cxx_test(xxx_test
+		SOURCES ${xxx_test_sources}
+		LIBRARIES ${xxx_libraries}
+		COVERAGE ${Coverage}
+		COVERAGE_BASE_DIR ${CMAKE_SOURCE_DIR}/xxx
+	)
 endif()
 
-
-# Benchmarks
-if(xxx_benchmarks)
-  message(STATUS "Enable benchmarks")
-  include(cmake/google_benchmark.cmake)
-  include(bench/list.cmake)
-  add_executable(benchmarks ${xxx_benchmarks_sources})
-  target_link_libraries(benchmarks xxx::xxx benchmark)
+if(xxx_bench)
+	include(bench/list.cmake)
+	cxx_benchmark(xxx_bench
+		SOURCES ${xxx_bench_sources}
+		LIBRARIES ${xxx_libraries}
+	)
 endif()
 
-
-# Documentation
-if(xxx_docs)
-  find_package(Doxygen)
-  if(DOXYGEN_FOUND)
-    message(STATUS "Enable documentation")
-    configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Doxyfile.in
-      ${CMAKE_BINARY_DIR}/Doxyfile
-    )
-    add_custom_target(${CMAKE_PROJECT_NAME}-doc
-      ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-      COMMENT "Generating documentation"
-    )
-  else()
-    message(STATUS "Disable documentation")
-  endif()
+if(xxx_doc)
+	cxx_doc(xxx
+		MAIN_PAGE ${CMAKE_SOURCE_DIR}/README.md
+		DIRECTORY ${CMAKE_SOURCE_DIR}/xxx
+	)
 endif()
 
-
-# Packaging {{{1
-
-set(CPACK_PACKAGE_VERSION "${CMAKE_PROJECT_VERSION}")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-list(APPEND CPACK_GENERATOR "TGZ")
-list(APPEND CPACK_SOURCE_GENERATOR "TGZ")
-
-# headers
-foreach(file ${xxx_sources})
-  if(${file} MATCHES ".hpp$")
-    get_filename_component(path ${file} PATH)
-    install(FILES ${file}
-      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${path}
-      COMPONENT dev
-    )
-  endif()
-endforeach()
-list(APPEND CPACK_COMPONENTS_ALL dev)
-
-# library
-install(TARGETS xxx
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  COMPONENT lib
-)
-list(APPEND CPACK_COMPONENTS_ALL lib)
-
-include(CPack)
+if(xxx_samples)
+	include(sample/list.cmake)
+	cxx_executable(xxx_sample
+		SOURCES ${xxx_sample_sources}
+		LIBRARIES ${xxx_libraries}
+	)
+endif()

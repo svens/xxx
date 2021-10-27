@@ -8,32 +8,43 @@ defaults:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.host }}-latest
 
     strategy:
       matrix:
-        os: [ubuntu, macos]
-        compiler: [gcc, clang]
+        host: [ubuntu, macos]
+        toolchain: [gcc, clang]
         include:
-          - os: windows
-            compiler: msvc
+          - host: windows
+            toolchain: msvc
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Configure buildsystem
         run: |
-          case "${{ matrix.compiler }}" in
-            gcc)
-              CC=gcc-9 CXX=g++-9
+          case "${{ matrix.host }}-${{ matrix.toolchain }}" in
+            ubuntu-gcc)
+              sudo apt-get install --yes g++-10 cmake ninja-build
+              export CC=gcc-10 CXX=g++-10
               ;;
-            clang)
-              CC=clang CXX=clang++
+            ubuntu-clang)
+              sudo apt-get install --yes g++-10 clang-10 cmake ninja-build
+              export CC=clang-10 CXX=clang++-10
+              ;;
+            macos-gcc)
+              brew install gcc@10 cmake ninja
+              export CC=gcc-10 CXX=g++-10
+              ;;
+            macos-clang)
+              brew install cmake ninja
               ;;
           esac
-          case "${{ matrix.os }}" in
+
+          case "${{ matrix.host }}" in
             ubuntu|macos)
-              brew install ninja
               cmake . -G "Ninja Multi-Config" -DCMAKE_CONFIGURATION_TYPES="Debug;Release"
               ;;
             windows)
@@ -57,17 +68,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Configure buildsystem
         run: |
-          brew install lcov
-          brew install lcov
-          CC=gcc-9 CXX=g++-9 COV=gcov-9 cmake . -DCMAKE_BUILD_TYPE=Coverage
+          sudo apt-get install --yes g++-10 cmake ninja-build
+          curl -Ls https://github.com/linux-test-project/lcov/releases/download/v1.15/lcov-1.15.tar.gz \
+            | gunzip -c \
+            | tar xvf -
+          sudo make -C lcov-1.15 install
+          CC=gcc-10 CXX=g++-10 COV=gcov-10 cmake . -DCMAKE_BUILD_TYPE=Coverage
 
       - name: Generate test coverage
-        run: cmake --build . --target xxx-cov
+        run: cmake --build . --target xxx_test-cov
 
       - uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: xxx.info
+          path-to-lcov: xxx_test.info

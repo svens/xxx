@@ -18,7 +18,7 @@ search and replace strings `xxx` and `XXX` with new project name.
 ## Compiling and installing
 
     $ mkdir build && cd build
-    $ cmake .. [-Dxxx_unittests=yes|no] [-Dxxx_benchmarks=yes|no] [-Dxxx_docs=yes|no]
+    $ cmake .. [-Dxxx_test=yes|no] [-Dxxx_bench=yes|no] [-Dxxx_doc=yes|no] [-Dxxx_samples=yes|no]
     $ make && make test && make install
 
 
@@ -31,4 +31,4 @@ The source tree is organised as follows:
     |  `- module    ... per module headers/sources/tests
     |- bench        Benchmarks
     |- cmake        CMake modules
-    `- extern       External code as git submodules
+    `- sample       Sample application using xxx
