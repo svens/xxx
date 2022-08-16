@@ -5,7 +5,6 @@ include(cmake/project_version.cmake)
 message(STATUS "${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 
 option(xxx_test "Build tests" ON)
-option(xxx_bench "Build benchmarks" OFF)
 option(xxx_doc "Generate documentation" OFF)
 option(xxx_samples "Build samples" OFF)
 
@@ -31,14 +30,6 @@ if(xxx_test)
 		SOURCES ${xxx_test_sources}
 		LIBRARIES ${xxx_libraries}
 		COVERAGE_BASE_DIR ${CMAKE_SOURCE_DIR}/xxx
-	)
-endif()
-
-if(xxx_bench)
-	include(bench/list.cmake)
-	cxx_benchmark(xxx_bench
-		SOURCES ${xxx_bench_sources}
-		LIBRARIES ${xxx_libraries}
 	)
 endif()
 
