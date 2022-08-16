@@ -6,10 +6,9 @@
 Provides tooling for:
 * Linux/MacOS/Windows builds using g++, clang++ and MSVC
 * CI: [GitHub Actions](https://github.com/features/actions)
-* Unittesting: [Catch2](https://github.com/catchorg/Catch2)
+* Unittesting/benchmarking: [Catch2](https://github.com/catchorg/Catch2)
 * Code coverage: [gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov.html)/[lcov](https://github.com/linux-test-project/lcov), [coveralls](https://docs.coveralls.io)
 * Documentation: [Doxygen](http://www.doxygen.nl)
-* Benchmarking: [Google benchmark](https://github.com/google/benchmark)
 
 To get started, clone this repository, get rid of existing .git directory,
 search and replace strings `xxx` and `XXX` with new project name.
@@ -18,7 +17,7 @@ search and replace strings `xxx` and `XXX` with new project name.
 ## Compiling and installing
 
     $ mkdir build && cd build
-    $ cmake .. [-Dxxx_test=yes|no] [-Dxxx_bench=yes|no] [-Dxxx_doc=yes|no] [-Dxxx_samples=yes|no]
+    $ cmake .. [-Dxxx_test=yes|no] [-Dxxx_doc=yes|no] [-Dxxx_samples=yes|no]
     $ make && make test && make install
 
 
@@ -28,7 +27,6 @@ The source tree is organised as follows:
 
     .               Root of source tree
     |- xxx          Library ...
-    |  `- module    ... per module headers/sources/tests
-    |- bench        Benchmarks
+    |  `- module    ... per module headers/sources/tests/benchmarks
     |- cmake        CMake modules
     `- sample       Sample application using xxx
