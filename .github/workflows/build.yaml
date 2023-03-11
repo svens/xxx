@@ -16,8 +16,8 @@ jobs:
         toolchain: [clang, gcc]
         build_type: [Debug, Release]
         include:
-        - host: windows
-          toolchain: msvc
+        - { host: windows, toolchain: msvc, build_type: Debug }
+        - { host: windows, toolchain: msvc, build_type: Release }
 
     steps:
     - uses: actions/checkout@v3
