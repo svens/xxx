@@ -35,11 +35,11 @@ jobs:
               export CC=clang-14 CXX=clang++-14
               ;;
             macos-gcc)
-              brew install gcc@10 cmake ninja
-              export CC=gcc-10 CXX=g++-10
+              brew install ninja
+              export CC=gcc-12 CXX=g++-12
               ;;
             macos-clang)
-              brew install cmake ninja
+              brew install ninja
               ;;
           esac
 
