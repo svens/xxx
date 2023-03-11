@@ -8,7 +8,7 @@ defaults:
 
 jobs:
   build:
-    runs-on: ${{ matrix.host }}-latest
+    runs-on: ${{matrix.host}}-latest
 
     strategy:
       matrix:
@@ -16,65 +16,66 @@ jobs:
         toolchain: [clang, gcc]
         build_type: [Debug, Release]
         include:
-          - { host: windows, toolchain: msvc, build_type: Debug }
-          - { host: windows, toolchain: msvc, build_type: Release }
+        - host: windows
+          toolchain: msvc
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
-      - name: Configure
-        run: |
-          case "${{matrix.host}}" in
-            macos)
-              brew install ninja
-              ;;
-            ubuntu)
-              sudo apt-get install --yes ninja-build
-              ;;
-            windows)
-              choco install -y ninja
-              ;;
-          esac
-          case "${{matrix.host}}-${{matrix.toolchain}}" in
-            *-gcc)
-              export CC=gcc-12 CXX=g++-12
-              ;;
-            linux-clang)
-              export CC=clang-14 CXX=clang++-14
-              ;;
-          esac
-          cmake . -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+    - name: Configure
+      run: |
+        case "${{matrix.host}}-${{matrix.toolchain}}" in
+          *-gcc)
+            export CC=gcc-12 CXX=g++-12
+            ;;
+          ubuntu-clang)
+            export CC=clang-14 CXX=clang++-14
+            ;;
+        esac
+        case "${{matrix.host}}" in
+          macos)
+            brew install ninja
+            cmake . -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+            ;;
+          ubuntu)
+            sudo apt-get install --yes ninja-build
+            cmake . -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+            ;;
+          windows)
+            cmake . -G "Visual Studio 17 2022" -A x64 -DCMAKE_CONFIGURATION_TYPES=${{matrix.build_type}}
+            ;;
+        esac
 
-      - name: Build
-        run: cmake --build .
+    - name: Build
+      run: cmake --build . --config ${{matrix.build_type}}
 
-      - name: Test
-        run: ctest --output-on-failure
+    - name: Test
+      run: ctest --output-on-failure --build-config ${{matrix.build_type}}
 
   coverage:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
-      - name: Configure buildsystem
-        run: |
-          sudo apt-get install --yes ninja-build
-          curl -Ls https://github.com/linux-test-project/lcov/releases/download/v1.15/lcov-1.15.tar.gz \
-            | gunzip -c \
-            | tar xvf -
-          sudo make -C lcov-1.15 install
-          CC=gcc-12 CXX=g++-12 COV=gcov-12 cmake . -G Ninja -DCMAKE_BUILD_TYPE=Coverage
+    - name: Configure buildsystem
+      run: |
+        sudo apt-get install --yes ninja-build
+        curl -Ls https://github.com/linux-test-project/lcov/releases/download/v1.15/lcov-1.15.tar.gz \
+          | gunzip -c \
+          | tar xvf -
+        sudo make -C lcov-1.15 install
+        CC=gcc-12 CXX=g++-12 COV=gcov-12 cmake . -G Ninja -DCMAKE_BUILD_TYPE=Coverage
 
-      - name: Generate test coverage
-        run: cmake --build . --target xxx_test-cov
+    - name: Generate test coverage
+      run: cmake --build . --target xxx_test-cov
 
-      - uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: xxx_test.info
+    - uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        :ath-to-lcov: xxx_test.info
