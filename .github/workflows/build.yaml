@@ -12,62 +12,54 @@ jobs:
 
     strategy:
       matrix:
-        host: [ubuntu, macos]
-        toolchain: [gcc, clang]
+        host: [macos, ubuntu]
+        toolchain: [clang, gcc]
+        build_type: [Debug, Release]
         include:
           - host: windows
             toolchain: msvc
+            build_type: [Debug, Release]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Configure buildsystem
+      - name: Configure
         run: |
-          case "${{ matrix.host }}-${{ matrix.toolchain }}" in
-            ubuntu-gcc)
-              sudo apt-get install --yes ninja-build
-              export CC=gcc-12 CXX=g++-12
-              ;;
-            ubuntu-clang)
-              sudo apt-get install --yes ninja-build
-              export CC=clang-14 CXX=clang++-14
-              ;;
-            macos-gcc)
-              brew install ninja
-              export CC=gcc-12 CXX=g++-12
-              ;;
-            macos-clang)
+          case "${{matrix.host}}" in
+            macos)
               brew install ninja
               ;;
-          esac
-
-          case "${{ matrix.host }}" in
-            ubuntu|macos)
-              cmake . -G "Ninja Multi-Config" -DCMAKE_CONFIGURATION_TYPES="Debug;Release"
+            ubuntu)
+              sudo apt-get install --yes ninja-build
               ;;
             windows)
-              cmake . -G "Visual Studio 17 2022" -A x64
+              choco install -y ninja
               ;;
           esac
+          case "${{matrix.toolchain}}" in
+            gcc)
+              export CC=gcc-12 CXX=g++-12
+              ;;
+            clang)
+              export CC=clang-14 CXX=clang++-14
+              ;;
+          esac
+          cmake . -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
-      - name: Debug build/test
-        run: |
-          cmake --build . --config Debug
-          ctest --build-config Debug --output-on-failure
+      - name: Build
+        run: cmake --build .
 
-      - name: Release build/test
-        run: |
-          cmake --build . --config Release
-          ctest --build-config Release --output-on-failure
+      - name: Test
+        run: ctest --output-on-failure
 
   coverage:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -78,7 +70,7 @@ jobs:
             | gunzip -c \
             | tar xvf -
           sudo make -C lcov-1.15 install
-          CC=gcc-12 CXX=g++-12 COV=gcov-12 cmake . -DCMAKE_BUILD_TYPE=Coverage
+          CC=gcc-12 CXX=g++-12 COV=gcov-12 cmake . -G Ninja -DCMAKE_BUILD_TYPE=Coverage
 
       - name: Generate test coverage
         run: cmake --build . --target xxx_test-cov
