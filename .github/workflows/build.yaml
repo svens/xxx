@@ -16,9 +16,8 @@ jobs:
         toolchain: [clang, gcc]
         build_type: [Debug, Release]
         include:
-          - host: windows
-            toolchain: msvc
-            build_type: [Debug, Release]
+          - { host: windows, toolchain: msvc, build_type: Debug }
+          - { host: windows, toolchain: msvc, build_type: Release }
 
     steps:
       - uses: actions/checkout@v3
@@ -38,11 +37,11 @@ jobs:
               choco install -y ninja
               ;;
           esac
-          case "${{matrix.toolchain}}" in
-            gcc)
+          case "${{matrix.host}}-${{matrix.toolchain}}" in
+            *-gcc)
               export CC=gcc-12 CXX=g++-12
               ;;
-            clang)
+            linux-clang)
               export CC=clang-14 CXX=clang++-14
               ;;
           esac
