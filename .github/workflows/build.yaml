@@ -27,12 +27,12 @@ jobs:
         run: |
           case "${{ matrix.host }}-${{ matrix.toolchain }}" in
             ubuntu-gcc)
-              sudo apt-get install --yes g++-10 cmake ninja-build
-              export CC=gcc-10 CXX=g++-10
+              sudo apt-get install --yes ninja-build
+              export CC=gcc-12 CXX=g++-12
               ;;
             ubuntu-clang)
-              sudo apt-get install --yes g++-10 clang-10 cmake ninja-build
-              export CC=clang-10 CXX=clang++-10
+              sudo apt-get install --yes ninja-build
+              export CC=clang-14 CXX=clang++-14
               ;;
             macos-gcc)
               brew install gcc@10 cmake ninja
@@ -73,12 +73,12 @@ jobs:
 
       - name: Configure buildsystem
         run: |
-          sudo apt-get install --yes g++-10 cmake ninja-build
+          sudo apt-get install --yes ninja-build
           curl -Ls https://github.com/linux-test-project/lcov/releases/download/v1.15/lcov-1.15.tar.gz \
             | gunzip -c \
             | tar xvf -
           sudo make -C lcov-1.15 install
-          CC=gcc-10 CXX=g++-10 COV=gcov-10 cmake . -DCMAKE_BUILD_TYPE=Coverage
+          CC=gcc-12 CXX=g++-12 COV=gcov-12 cmake . -DCMAKE_BUILD_TYPE=Coverage
 
       - name: Generate test coverage
         run: cmake --build . --target xxx_test-cov
