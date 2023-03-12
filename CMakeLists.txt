@@ -20,15 +20,14 @@ include(cmake/cxx.cmake)
 
 include(xxx/list.cmake)
 cxx_library(xxx
+	ALIAS xxx::xxx
 	SOURCES ${xxx_sources}
 )
-
-set(xxx_libraries xxx::xxx)
 
 if(xxx_test)
 	cxx_test(xxx_test
 		SOURCES ${xxx_test_sources}
-		LIBRARIES ${xxx_libraries}
+		LIBRARIES xxx::xxx
 		COVERAGE_BASE_DIR ${CMAKE_SOURCE_DIR}/xxx
 	)
 endif()
@@ -44,6 +43,6 @@ if(xxx_samples)
 	include(sample/list.cmake)
 	cxx_executable(xxx_sample
 		SOURCES ${xxx_sample_sources}
-		LIBRARIES ${xxx_libraries}
+		LIBRARIES xxx::xxx
 	)
 endif()
