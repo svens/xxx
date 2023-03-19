@@ -1,8 +1,15 @@
+configure_file(
+	xxx/version.cpp.in
+	version.cpp
+	@ONLY
+)
+list(APPEND xxx_sources ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+
 list(APPEND xxx_sources
-	xxx/__bits/lib.hpp
 	xxx/__bits/platform_sdk.hpp
 	xxx/error.hpp
 	xxx/error.cpp
+	xxx/version.hpp
 )
 
 list(APPEND xxx_test_sources

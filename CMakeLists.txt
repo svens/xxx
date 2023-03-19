@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(xxx LANGUAGES CXX)
 include(cmake/project_version.cmake)
-message(STATUS "${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
+message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION}")
 
 option(xxx_test "Build tests" ON)
 option(xxx_doc "Generate documentation" OFF)

@@ -1,18 +1,21 @@
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <xxx/common.test.hpp>
-#include <catch2/catch_session.hpp>
+#if !defined(_CRT_SECURE_NO_WARNINGS)
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
 #include <cstdlib>
 
+#include <xxx/version.hpp>
+#include <xxx/common.test.hpp>
+#include <catch2/catch_session.hpp>
 
-#if __xxx_os_windows && !NDEBUG
+
+#if __xxx_os_windows && __xxx_build_debug
 
 int report_hook (int report_type, char *message, int *return_value)
 {
 	static const char *level[] = { "WARN", "ERROR", "ASSERT" };
 	printf("[%s] %s\n", level[report_type], message);
 	*return_value = 0;
-	return TRUE;
+	return true;
 }
 
 void set_report_hook ()

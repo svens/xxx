@@ -1,0 +1,10 @@
+#include <xxx/version.hpp>
+
+__xxx_begin
+
+const char version[] = "@PROJECT_VERSION@";
+const int version_major = @PROJECT_VERSION_MAJOR@;
+const int version_minor = @PROJECT_VERSION_MINOR@;
+const int version_patch = @PROJECT_VERSION_PATCH@;
+
+__xxx_end
