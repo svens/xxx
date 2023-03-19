@@ -16,5 +16,5 @@ list(APPEND xxx_test_sources
 	xxx/common.test.hpp
 	xxx/common.test.cpp
 	xxx/error.test.cpp
-	xxx/invoke.test.cpp
+	xxx/invoke.bench.cpp
 )
