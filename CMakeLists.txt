@@ -8,7 +8,7 @@ option(xxx_test "Build tests" ON)
 option(xxx_doc "Generate documentation" OFF)
 option(xxx_samples "Build samples" OFF)
 
-if(NOT "${CMAKE_BUILD_TYPE};${CMAKE_CONFIGURATION_TYPES}" MATCHES ".*Coverage.*")
+if("${CMAKE_BUILD_TYPE};${CMAKE_CONFIGURATION_TYPES}" MATCHES ".*Coverage.*")
 	set(xxx_test ON)
 endif()
 
