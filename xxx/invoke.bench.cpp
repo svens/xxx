@@ -1,5 +1,6 @@
 #include <xxx/common.test.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
+#include <functional>
 
 
 namespace {
